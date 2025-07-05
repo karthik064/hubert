@@ -1,0 +1,5 @@
+# HuBERT Base
+wget https://dl.fbaipublicfiles.com/fairseq/hubert/hubert_base_ls960.pt -P /home/yourname/models
+
+# wav2vec_small
+wget https://dl.fbaipublicfiles.com/fairseq/wav2vec/wav2vec_small.pt -P /home/yourname/models
