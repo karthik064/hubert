@@ -1,63 +1,49 @@
-import numpy as np
-import librosa
-import torch
-import torchaudio
+import tensorflow as tf
+import pandas as pd
 
-class AudioAugmentor:
-    def __init__(self,
-                 noise_level_impulsive=0.002,
-                 noise_level_non_impulsive=0.01,
-                 time_stretch_range=(0.8, 1.2),
-                 pitch_shift_steps=(-2, 2),
-                 volume_gain_db=(-5, 5),
-                 clip_threshold=0.5):
-        self.noise_level_impulsive = noise_level_impulsive
-        self.noise_level_non_impulsive = noise_level_non_impulsive
-        self.time_stretch_range = time_stretch_range
-        self.pitch_shift_steps = pitch_shift_steps
-        self.volume_gain_db = volume_gain_db
-        self.clip_threshold = clip_threshold
+# === 1. Set GPU 6 only ===
+gpus = tf.config.list_physical_devices('GPU')
+if len(gpus) > 6:
+    try:
+        tf.config.set_visible_devices(gpus[6], 'GPU')
+        tf.config.experimental.set_memory_growth(gpus[6], True)
+        print("Using GPU 6")
+    except RuntimeError as e:
+        print(e)
+else:
+    print("GPU 6 not available, using default device.")
 
-    def add_noise(self, y, noise_level):
-        noise = np.random.randn(len(y))
-        return y + noise_level * noise
+# === 2. Your DataFrame with audio file paths and labels ===
+file_paths = df['filepath'].tolist()
+labels = df['label'].tolist()  # Optional if you want to evaluate accuracy
 
-    def time_stretch(self, y, rate):
-        return librosa.effects.time_stretch(y, rate=rate)
+# === 3. Preprocessing function to load audio ===
+def load_audio(path, label):
+    audio = tf.io.read_file(path)
+    audio, _ = tf.audio.decode_wav(audio, desired_channels=1)
+    audio = tf.squeeze(audio, axis=-1)
+    desired_length = 16000
+    audio = audio[:desired_length]
+    paddings = [[0, tf.maximum(0, desired_length - tf.shape(audio)[0])]]
+    audio = tf.pad(audio, paddings)
+    return audio, label
 
-    def pitch_shift(self, y, sr, n_steps):
-        return librosa.effects.pitch_shift(y, sr=sr, n_steps=n_steps)
+# === 4. Create batched dataset ===
+dataset = tf.data.Dataset.from_tensor_slices((file_paths, labels))
+dataset = dataset.map(load_audio, num_parallel_calls=tf.data.AUTOTUNE)
+dataset = dataset.batch(32).prefetch(tf.data.AUTOTUNE)
 
-    def change_volume(self, y, gain_db):
-        factor = 10.0 ** (gain_db / 20.0)
-        return y * factor
+# === 5. Load your model (assuming function build_model exists) ===
+num_classes = len(set(labels))
+model = build_model(input_shape=(16000,), num_classes=num_classes)
 
-    def clip_audio(self, y, threshold):
-        return np.clip(y, -threshold, threshold)
+# If you have saved weights, load them here
+# model.load_weights('path_to_weights.h5')
 
-    def augment(self, y, sr, is_impulsive=False):
-        if is_impulsive:
-            # Safe augmentations only
-            y_aug = self.add_noise(y, self.noise_level_impulsive)
-            gain_db = np.random.uniform(*self.volume_gain_db)
-            y_aug = self.change_volume(y_aug, gain_db)
-        else:
-            # Non-impulsive: allow full pipeline
-            y_aug = self.add_noise(y, self.noise_level_non_impulsive)
+# === 6. Run inference ===
+predictions = model.predict(dataset)
 
-            # Time stretch
-            stretch_rate = np.random.uniform(*self.time_stretch_range)
-            y_aug = self.time_stretch(y_aug, stretch_rate)
+# If you want predicted class indices:
+predicted_classes = tf.argmax(predictions, axis=1).numpy()
 
-            # Pitch shift
-            n_steps = np.random.uniform(*self.pitch_shift_steps)
-            y_aug = self.pitch_shift(y_aug, sr, n_steps)
-
-            # Volume
-            gain_db = np.random.uniform(*self.volume_gain_db)
-            y_aug = self.change_volume(y_aug, gain_db)
-
-            # Clipping
-            y_aug = self.clip_audio(y_aug, self.clip_threshold)
-
-        return torch.tensor(y_aug).view(1,-1).float()
+print(predicted_classes)
