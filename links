@@ -1,3 +1,28 @@
+is_impulsive = {
+    "Water_pour": True,
+    "Siren": False,
+    "Appliance_alarm": True,
+    "Cough": True,
+    "Door_open_close": True,
+    "Baby_cry": False,
+    "Glass_break": True,
+    "Bell": False,
+    "Sneeze": True,
+    "Baby_laugher": False,
+    "Boiling": True,
+    "Snore": False,
+    "Water_tap": False,
+    "Dog_bark": True,
+    "Gunshot": True,
+    "Yell": True,
+    "Clap": True,
+    "Scream": False,
+    "Alarm": False,
+    "Doorbell": True,
+    "Finger_snap": True,
+    "Dog_whine": False,
+    "Fire_smoke_alarm": False
+}
 # HuBERT Base
 wget https://dl.fbaipublicfiles.com/fairseq/hubert/hubert_base_ls960.pt -P /home/yourname/models
 
