@@ -1,3 +1,41 @@
+Total positive count (matched synonyms): 3125
+
+Total negative count (did not match synonyms): 2811
+
+Total samples: 5936
+
+Accuracy calculation:
+
+Accuracy
+=
+Positive count
+Total samples
+×
+100
+Accuracy= 
+Total samples
+Positive count
+​
+ ×100
+Plugging in your values:
+
+Accuracy
+=
+3125
+5936
+×
+100
+≈
+52.64
+%
+Accuracy= 
+5936
+3125
+​×100≈52.64%
+
+
+
+
 is_impulsive = {
     "Water_pour": True,
     "Siren": False,
