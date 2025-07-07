@@ -1,4 +1,52 @@
+import os
+import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.metrics import roc_curve, auc
+from sklearn.preprocessing import label_binarize
+
+# Assume these are defined:
+# y_true (N,), integer labels 0..22
+# y_scores (N, 23), predicted probabilities per class
+# class_names (list of 23 class names)
+
+# 1. Binarize labels for multi-class ROC
+y_true_bin = label_binarize(y_true, classes=list(range(len(class_names))))
+
+# 2. Create directory to save plots
+save_dir = "outputs/roc_curves"
+os.makedirs(save_dir, exist_ok=True)
+
+# 3. Plot setup
+plt.figure(figsize=(14, 10))
+
+for i in range(len(class_names)):
+    fpr, tpr, _ = roc_curve(y_true_bin[:, i], y_scores[:, i])
+    roc_auc = auc(fpr, tpr)
+    
+    # Smooth interpolation (optional)
+    fpr_smooth = np.linspace(0, 1, 1000)
+    tpr_smooth = np.interp(fpr_smooth, fpr, tpr)
+    
+    plt.plot(fpr_smooth, tpr_smooth, lw=2,
+             label=f'{class_names[i]} (AUC = {roc_auc:.2f})')
+
+# 4. Plot formatting
+plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')  # Diagonal line
+plt.xlim([0.0, 1.0])
+plt.ylim([0.0, 1.05])
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Multi-class ROC Curves')
+plt.legend(loc='lower right', fontsize='small', ncol=2)
+plt.grid(True)
+plt.tight_layout()
+
+# 5. Save the figure
+save_path = os.path.join(save_dir, "multi_class_roc.png")
+plt.savefig(save_path, dpi=300)
+plt.close()
+
+print(f"ROC curves saved to: {save_path}")import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import os
