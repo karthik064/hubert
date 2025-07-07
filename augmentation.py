@@ -1,3 +1,42 @@
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+import os
+from sklearn.metrics import confusion_matrix
+
+# Assume these are already defined
+# y_true, y_pred, y_scores
+# class_names = ['class_0', 'class_1', ..., 'class_22']
+
+# 1. Create a directory to save the plot
+save_dir = "outputs/confusion_matrix"
+os.makedirs(save_dir, exist_ok=True)  # Create directory if it doesn't exist
+
+# 2. Compute the confusion matrix
+cm = confusion_matrix(y_true, y_pred)
+
+# 3. Normalize for smoother visual (optional)
+cm_normalized = cm.astype('float') / cm.sum(axis=1, keepdims=True)
+
+# 4. Plot
+plt.figure(figsize=(16, 12))
+sns.heatmap(cm_normalized, annot=True, fmt=".2f", cmap='YlGnBu',
+            xticklabels=class_names, yticklabels=class_names,
+            linewidths=0.5, linecolor='gray', cbar=True)
+
+plt.title('Normalized Confusion Matrix')
+plt.xlabel('Predicted Label')
+plt.ylabel('True Label')
+plt.xticks(rotation=90)  # X-axis vertical
+plt.yticks(rotation=0)
+plt.tight_layout()
+
+# 5. Save the plot
+save_path = os.path.join(save_dir, "confusion_matrix.png")
+plt.savefig(save_path, dpi=300)
+plt.close()  # Close the figure to free memory
+
+print(f"Confusion matrix saved to: {save_path}")
 import tensorflow as tf
 import pandas as pd
 
