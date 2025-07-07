@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Audio Classification</title>
+</head>
+<body>
+    <h1>Audio Model Inference</h1>
+    
+    <form method="POST" enctype="multipart/form-data">
+        <label for="model">Select Model:</label>
+        <select name="model" id="model" required>
+            {% for model in model_names %}
+                <option value="{{ model }}">{{ model }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+
+        <label for="audio">Upload Audio File:</label>
+        <input type="file" name="audio" accept="audio/*" required>
+        <br><br>
+
+        <button type="submit">Run Inference</button>
+    </form>
+
+    {% if prediction %}
+        <h2>Prediction:</h2>
+        <p>{{ prediction }}</p>
+    {% endif %}
+</body>
+</html>
