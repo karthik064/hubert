@@ -1,0 +1,115 @@
+ {
+    "Alarm": [
+        "Fire alarm",
+        "Alarm",
+        "Civil defense siren",
+        "Smoke detector, smoke alarm",
+        "Fire engine, fire truck (siren)",
+        "Siren"
+    ],
+    "Appliance_alarm": [
+        "Alarm",
+        "Alarm clock"
+    ],
+    "Baby_cry": [
+        "Crying, sobbing",
+        "Babbling"
+    ],
+    "Baby_laugher": [
+        "Crying, sobbing",
+        "Laughter",
+        "Babbling"
+    ],
+    "Bell": [
+        "Ding",
+        "Bell",
+        "Chime"
+    ],
+    "Boiling": [
+        "Water",
+        "Pour"
+    ],
+    "Clap": [
+        "Slap, smack",
+        "Clapping",
+        "Applause"
+    ],
+    "Cough": [
+        "Cough"
+    ],
+    "Dog_bark": [
+        "Dog",
+        "Howl",
+        "Animal",
+        "Bark"
+    ],
+    "Dog_whine": [
+        "Dog",
+        "Howl",
+        "Whimper"
+    ],
+    "Door_open_close": [
+        "Drawer open or close",
+        "Squeak",
+        "Knock",
+        "Door"
+    ],
+    "Doorbell": [
+        "Bell"
+    ],
+    "Finger_snap": [
+        "Finger snapping"
+    ],
+    "Fire_smoke_alarm": [
+        "Fire alarm",
+        "Alarm",
+        "Smoke detector, smoke alarm",
+        "Siren",
+        "Alarm clock"
+    ],
+    "Glass_break": [
+        "Shatter",
+        "Breaking",
+        "Chink, clink",
+        "Crack",
+        "Glass"
+    ],
+    "Gunshot": [
+        "Machine gun",
+        "Gunshot, gunfire"
+    ],
+    "Scream": [
+        "Screaming",
+        "Whimper",
+        "Wail, moan",
+        "Siren"
+    ],
+    "Siren": [
+        "Alarm",
+        "Fire engine, fire truck (siren)",
+        "Siren",
+        "Police car (siren)",
+        "Emergency vehicle"
+    ],
+    "Sneeze": [
+        "Sneeze"
+    ],
+    "Snore": [
+        "Snoring"
+    ],
+    "Water_pour": [
+        "Water",
+        "Liquid",
+        "Bathtub (filling or washing)",
+        "Drip"
+    ],
+    "Water_tap": [
+        "Drip",
+        "Plop",
+        "Water"
+    ],
+    "Yell": [
+        "Screaming",
+        "Speech"
+    ]
+}
