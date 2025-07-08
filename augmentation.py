@@ -1,3 +1,49 @@
+import torch
+import torch.nn.functional as F
+
+def multiclass_focal_loss(preds, labels, alpha, gamma=2.0, reduction='mean'):
+    """
+    preds: Tensor of shape (B, 23) — raw logits
+    labels: Tensor of shape (B,) — integer class indices
+    alpha: Tensor or list of shape (23,) — per-class weights (e.g., 1 / class frequency)
+    gamma: focusing parameter
+    """
+    num_classes = preds.size(1)
+    device = preds.device
+    
+    # Convert alpha to tensor and move to same device
+    if not isinstance(alpha, torch.Tensor):
+        alpha = torch.tensor(alpha, dtype=torch.float32, device=device)
+    else:
+        alpha = alpha.to(device)
+
+    # One-hot encode labels: shape (B, 23)
+    labels_one_hot = F.one_hot(labels, num_classes=num_classes).float()
+
+    # Softmax to get predicted probabilities
+    probs = F.softmax(preds, dim=1)  # shape (B, 23)
+
+    # Get the probabilities of the true classes
+    pt = (probs * labels_one_hot).sum(dim=1)  # shape (B,)
+
+    # Get alpha values for the true classes
+    alpha_t = (alpha * labels_one_hot).sum(dim=1)  # shape (B,)
+
+    # Compute focal loss
+    loss = -alpha_t * (1 - pt) ** gamma * torch.log(pt + 1e-8)  # shape (B,)
+
+    if reduction == 'mean':
+        return loss.mean()
+    elif reduction == 'sum':
+        return loss.sum()
+    else:
+        return loss
+
+
+
+
+
+
 import os
 import numpy as np
 import matplotlib.pyplot as plt
